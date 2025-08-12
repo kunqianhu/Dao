@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>道德经</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600&display=swap"
+        rel="stylesheet"
+    />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: #f9f7f1;
+            color: #333;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Fixed Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(249, 247, 241, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(51, 51, 51, 0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 500;
+            color: #567a6a;
+            letter-spacing: 2px;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        /* Search box */
+        .search-box {
+            position: relative;
+            width: 200px;
+            max-width: 40vw;
+        }
+
+        .search-box input[type='search'] {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 1.5px solid #567a6a;
+            font-size: 16px;
+            font-family: 'Noto Serif SC', serif;
+            color: #333;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-box input[type='search']:focus {
+            outline: none;
+            border-color: #3a7d44;
+            box-shadow: 0 0 5px #3a7d44aa;
+        }
+        .highlight {
+    background-color: #ffff66;
+    color: #000;
+    font-weight: bold;
+}
+
+        /* Mobile Menu Button */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 25px;
+            left: 20px;
+            z-index: 1001;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #567a6a;
+            cursor: pointer;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Navigation Sidebar */
+        .navigation {
+            width: 25%;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            left: 0;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 999;
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            margin: 0;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 15px 25px;
+            text-decoration: none;
+            color: #444;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .nav-link:hover {
+            background-color: #f0f8f0;
+            border-left-color: #3a7d44;
+            color: #3a7d44;
+        }
+
+        .nav-link.active {
+            background-color: #e8f5e8;
+            border-left-color: #567a6a;
+            color: #567a6a;
+            font-weight: 500;
+        }
+
+        .section-number {
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 25%;
+            width: 75%;
+            padding: 40px 60px;
+        }
+
+        .section {
+            margin-bottom: 60px;
+            scroll-margin-top: 100px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #567a6a;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8f5e8;
+        }
+
+        .section-content {
+            font-size: 18px;
+            line-height: 2;
+            color: #444;
+            text-align: justify;
+            letter-spacing: 1px;
+            white-space: pre-wrap;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .header h1 {
+                font-size: 22px;
+                padding-left: 60px;
+                flex-grow: unset;
+                text-align: left;
+            }
+
+            .search-box {
+                width: 150px;
+            }
+
+            .navigation {
+                width: 280px;
+                transform: translateX(-100%);
+            }
+
+            .navigation.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 30px 20px;
+            }
+
+            .section-content {
+                font-size: 16px;
+                line-height: 1.9;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+        }
+
+        /* Mobile Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar */
+        .navigation::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .navigation::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .navigation::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .navigation::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header class="header">
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <h1>道德经</h1>
+     <div class="search-box">
+    <input
+        type="search"
+        id="searchInput"
+        placeholder="搜索"
+        aria-label="搜索"
+        oninput="handleSearch()"
+    />
+</div>
+    </header>
+
+    <!-- Mobile Overlay -->
+    <div class="overlay" onclick="closeMenu()"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Navigation Sidebar -->
+        <nav class="navigation" id="navigation">
+            <ul class="nav-list" id="navList">
+                <li class="nav-item">
+                    <a href="#section1" class="nav-link" onclick="closeMenu()">
+                        <span class="section-number">第一章</span> 道可道，非常道；名可名，非常名。
+                    </a>
+                </li>
+                <li class="nav-item">
+    <a href="#section2" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第二章</span> 天下皆知美之为美，斯恶已。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section3" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第三章</span> 不尚贤，使民不争。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section4" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第四章</span> 道冲而用之或不盈。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section5" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第五章</span> 天地不仁以万物为刍狗。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section6" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第六章</span> 谷神不死是谓玄牝。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section7" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第七章</span> 天长地久。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section8" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第八章</span> 上善若水。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section9" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第九章</span> 持而盈之，不如其已。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section10" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第十章</span> 载营魄抱一，能无离乎？
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section11" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第十一章</span> 三十辐，共一毂。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section12" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第十二章</span> 五色令人目盲。
+    </a>
+                    <li class="nav-item">
+    <a href="#section13" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第十三章</span> 宠辱若惊，贵大患若身。
+    </a>
+</li>
+<li class="nav-item">
+    <a href="#section14" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第十四章</span> 视之不见，名曰夷。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section15" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第十五章</span> 古之善为士者，微妙玄通。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section16" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第十六章</span> 致虚极，守静笃。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section17" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第十七章</span> 太上，不知有之。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section18" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第十八章</span> 大道废，有仁义。
+    </a>
+                    <li class="nav-item">
+    <a href="#section19" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第十九章</span> 绝圣弃智，民利百倍。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section20" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第二十章</span> 唯之与阿，相去几何。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section21" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第二十一章</span> 孔德之容，惟道是从。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section22" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第二十二章</span> 曲则全，枉则直。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section23" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第二十三章</span> 希言自然。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section24" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第二十四章</span> 企者不立。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section25" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第二十五章</span> 有物混成。
+    </a>
+</li>
+               <li class="nav-item">
+    <a href="#section26" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第二十六章</span> 重为轻根。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section27" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第二十七章</span> 善行无辙迹。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section28" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第二十八章</span> 知其雄。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section29" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第二十九章</span> 将欲取天下。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section30" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第三十章</span> 以道佐人主。
+    </a>
+</li> 
+                <li class="nav-item">
+    <a href="#section31" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第三十一章</span> 兵者不祥之器。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section32" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第三十二章</span> 道常无名。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section33" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第三十三章</span> 知人者智。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section34" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第三十四章</span> 大道泛兮。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section35" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第三十五章</span> 执大象，天下往。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section36" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第三十六章</span> 将欲歙之。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section37" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第三十七章</span> 道常无为。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section38" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第三十八章</span> 上德不德。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section39" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第三十九章</span> 昔之得一者。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section40" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第四十章</span> 反者道之动。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section41" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第四十一章</span> 上士闻道。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section42" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第四十二章</span> 道生一。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section43" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第四十三章</span> 天下之至柔。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section44" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第四十四章</span> 名与身孰亲。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section45" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第四十五章</span> 大成若缺。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section46" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第四十六章</span> 天下有道。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section47" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第四十七章</span> 不出户。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section48" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第四十八章</span> 为学日益。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section49" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第四十九章</span> 圣人无常心。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section50" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第五十章</span> 出生入死。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section51" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第五十一章</span> 道生之。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section52" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第五十二章</span> 天下有道。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section53" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第五十三章</span> 使我介然有知。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section54" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第五十四章</span> 善建者不拔。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section55" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第五十五章</span> 含德之厚。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section56" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第五十六章</span> 知者不言。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section57" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第五十七章</span> 以正治国。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section58" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第五十八章</span> 其政闷闷。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section59" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第五十九章</span> 治人事天。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section60" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第六十章</span> 治大国若烹小鲜。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section61" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第六十一章</span> 大国者下流。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section62" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第六十二章</span> 道者万物之奥。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section63" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第六十三章</span> 为无为。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section64" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第六十四章</span> 其安易持。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section65" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第六十五章</span> 古之善为士者。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section66" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第六十六章</span> 江海所以能为百谷王者。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section67" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第六十七章</span> 我有三宝。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section68" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第六十八章</span> 善为士者不武。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section69" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第六十九章</span> 用兵有言。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section70" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第七十章</span> 含德之厚，比于赤子。
+    </a>
+</li>
+                <li class="nav-item">
+    <a href="#section71" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第七十一章</span> 知不知，上。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section72" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第七十二章</span> 民不畏威，则大威至。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section73" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第七十三章</span> 勇于敢则杀。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section74" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第七十四章</span> 民不畏死，奈何以死惧之？
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section75" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第七十五章</span> 民之饥，以其上食税之多。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section76" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第七十六章</span> 人之生也柔弱。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section77" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第七十七章</span> 天之道，利而不害。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section78" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第七十八章</span> 天下莫柔弱于水。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section79" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第七十九章</span> 和大怨，必有余怨。
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="#section80" class="nav-link" onclick="closeMenu()">
+        <span class="section-number">第八十章</span> 小国寡民。
+    </a>
+</li>
+
+                
+                <!-- Add more chapters here -->
+                <li class="nav-item">
+                    <a href="#section81" class="nav-link" onclick="closeMenu()">
+                        <span class="section-number">第八十一章</span> 信言不美，美言不信。
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <section id="section1" class="section">
+                <h2 class="section-title">第一章</h2>
+                <div class="section-content">
+                    道可道，非常道；名可名，非常名。无，名天地之始；有，名万物之母。故常无，欲以观其妙；常有，欲以观其徼。此两者，同出而异名，同谓之玄。玄之又玄，众妙之门。
+                </div>
+            </section>
+            <section id="section2" class="section">
+    <h2 class="section-title">第二章</h2>
+    <div class="section-content">
+        天下皆知美之为美，斯恶已；皆知善之为善，斯不善已。故有无相生，难易相成，长短相形，高下相倾，音声相和，前后相随。是以圣人处无为之事，行不言之教；万物作而弗始，生而弗有，为而弗恃，功成而不处。夫唯弗处，故弗去。
+    </div>
+</section>
+            <section id="section3" class="section">
+    <h2 class="section-title">第三章</h2>
+    <div class="section-content">
+        不尚贤，使民不争；不贵难得之货，使民不为盗；不见可欲，使民心不乱。是以圣人之治，虚其心，实其腹，弱其志，强其骨。常使民无知无欲，使夫智者不敢为也。为无为，则无不治。
+    </div>
+</section>
+            <section id="section4" class="section">
+    <h2 class="section-title">第四章</h2>
+    <div class="section-content">
+        道冲而用之或不盈，渊兮似万物之宗。挫其锐，解其纷，和其光，同其尘。湛兮似或存。吾不知谁之子，象帝之先。
+    </div>
+</section>
+            <section id="section5" class="section">
+    <h2 class="section-title">第五章</h2>
+    <div class="section-content">
+        天地不仁，以万物为刍狗；圣人不仁，以百姓为刍狗。天地之间，其犹橐龠乎。虚而不屈，动而愈出。多言数穷，不如守中。
+    </div>
+</section>
+            <section id="section6" class="section">
+    <h2 class="section-title">第六章</h2>
+    <div class="section-content">
+        谷神不死，是谓玄牝。玄牝之门，是谓天地根。绵绵若存，用之不勤。
+    </div>
+</section>
+            <section id="section7" class="section">
+    <h2 class="section-title">第七章</h2>
+    <div class="section-content">
+        天长地久。天地所以能长且久者，以其不自生，故能长生。是以圣人后其身而身先，外其身而身存。非以其无私邪？故能成其私。
+    </div>
+</section>
+            <section id="section8" class="section">
+    <h2 class="section-title">第八章</h2>
+    <div class="section-content">
+        上善若水。水善利万物而不争，处众人之所恶，故几于道。居善地，心善渊，与善仁，言善信，政善治，事善能，动善时。夫唯不争，故无尤。
+    </div>
+</section>
+            <section id="section9" class="section">
+    <h2 class="section-title">第九章</h2>
+    <div class="section-content">
+        持而盈之，不如其已；揣而锐之，不可长保。金玉满堂，莫之能守；富贵而骄，自遗其咎。功成身退，天之道也。
+    </div>
+</section>
+            <section id="section10" class="section">
+    <h2 class="section-title">第十章</h2>
+    <div class="section-content">
+        载营魄抱一，能无离乎？专气致柔，能如婴儿乎？涤除玄览，能无疵乎？爱民治国，能无为乎？天门开阖，能为雌乎？明白四达，能无知乎？生之畜之，生而不有，为而不恃，长而不宰，是谓玄德。
+    </div>
+</section>
+            <section id="section11" class="section">
+    <h2 class="section-title">第十一章</h2>
+    <div class="section-content">
+        三十辐，共一毂，当其无，有车之用。埏埴以为器，当其无，有器之用。凿户牖以为室，当其无，有室之用。故有之以为利，无之以为用。
+    </div>
+</section>
+            <section id="section12" class="section">
+    <h2 class="section-title">第十二章</h2>
+    <div class="section-content">
+        五色令人目盲；五音令人耳聋；五味令人口爽；驰骋畋猎，令人心发狂；难得之货，令人行妨。是以圣人为腹不为目，故去彼取此。
+    </div>
+</section>
+            <section id="section13" class="section">
+    <h2 class="section-title">第十三章</h2>
+    <div class="section-content">
+        宠辱若惊，贵大患若身。何谓宠辱若惊？宠为下，得之若惊，失之若惊，是谓宠辱若惊。何谓贵大患若身？吾所以有大患者，为吾有身，及吾无身，吾有何患？故贵以身为天下，若可寄天下；爱以身为天下，若可托天下。
+    </div>
+</section>
+            <section id="section14" class="section">
+    <h2 class="section-title">第十四章</h2>
+    <div class="section-content">
+        视之不见，名曰夷；听之不闻，名曰希；抟之不得，名曰微。此三者不可致诘，故混而为一。其上不皦，其下不昧，绳绳兮不可名，复归于无物。是谓无状之状，无物之象，是谓惚恍。迎之不见其首，随之不见其后。执古之道，以御今之有。
+    </div>
+</section>
+            <section id="section15" class="section">
+    <h2 class="section-title">第十五章</h2>
+    <div class="section-content">
+        古之善为士者，微妙玄通，深不可识。夫唯不可识，故强为之容。豫兮若冬涉川；犹兮若畏四邻；俨兮其若容；涣兮若冰之将释；敦兮其若朴；旷兮其若谷；混兮其若浊。孰能浊以静之徐清？孰能安以久动之徐生？保此道者不欲盈。夫唯不盈，故能蔽而新成。
+    </div>
+</section>
+            <section id="section16" class="section">
+    <h2 class="section-title">第十六章</h2>
+    <div class="section-content">
+        致虚极，守静笃。万物并作，吾以观复。夫物芸芸，各复归其根，归根曰静，静曰复命。复命曰常，知常曰明。不知常，妄作凶。知常容，容乃公，公乃王，王乃天，天乃道，道乃久，没身不殆。
+    </div>
+</section>
+            <section id="section17" class="section">
+    <h2 class="section-title">第十七章</h2>
+    <div class="section-content">
+        太上，不知有之；其次，亲而誉之；其次，畏之；其次，侮之。信不足焉，有不信焉。犹兮其贵言。成功遂事，而百姓皆谓我自然。
+    </div>
+</section>
+            <section id="section18" class="section">
+    <h2 class="section-title">第十八章</h2>
+    <div class="section-content">
+        大道废，有仁义；智慧出，有大伪；六亲不和，有孝慈；国家昏乱，有忠臣。
+    </div>
+</section>
+            <section id="section19" class="section">
+    <h2 class="section-title">第十九章</h2>
+    <div class="section-content">
+        绝圣弃智，民利百倍；绝仁弃义，民复孝慈；绝巧弃利，盗贼无有。此三者以为文不足，故令有所属：见素抱朴，少私寡欲。
+    </div>
+</section>
+            <section id="section20" class="section">
+    <h2 class="section-title">第二十章</h2>
+    <div class="section-content">
+        唯之与阿，相去几何？美之与恶，相去若何？人之所畏，不可不畏。荒兮其未央哉！众人熙熙，如享太牢，如登春台。我独泊兮其未兆，如婴儿之未孩，儡儡兮若无所归。众人皆有余，而我独若遗。我愚人之心也哉！沌沌兮。
+    </div>
+</section>
+            <section id="section21" class="section">
+    <h2 class="section-title">第二十一章</h2>
+    <div class="section-content">
+        孔德之容，惟道是从。道之为物惟恍惟惚。惚兮恍兮，其中有象；恍兮惚兮，其中有物。窈兮冥兮，其中有精；其精甚真，其中有信。自今及古，其名不去，以阅众甫。
+    </div>
+</section>
+
+<section id="section22" class="section">
+    <h2 class="section-title">第二十二章</h2>
+    <div class="section-content">
+        曲则全，枉则直，洼则盈，敝则新，少则得，多则惑。是以圣人抱一为天下式。不自见故明，不自是故彰，不自伐故有功，不自矜故长。夫唯不争，故天下莫能与之争。
+    </div>
+</section>
+
+<section id="section23" class="section">
+    <h2 class="section-title">第二十三章</h2>
+    <div class="section-content">
+        希言自然。故飘风不终朝，骤雨不终日。孰为此者？天地。天地尚不能久，而况于人乎？故从事于道者，同于道；德者，同于德；失者，同于失。同于道者，道亦乐得之；同于德者，德亦乐得之；同于失者，失亦乐得之。信不足焉，有不信焉。
+    </div>
+</section>
+
+<section id="section24" class="section">
+    <h2 class="section-title">第二十四章</h2>
+    <div class="section-content">
+        企者不立，跨者不行，自见者不明，自是者不彰，自伐者无功，自矜者不长。其在道也，曰余食赘行。物或恶之，故有道者不处。
+    </div>
+</section>
+
+<section id="section25" class="section">
+    <h2 class="section-title">第二十五章</h2>
+    <div class="section-content">
+        有物混成，先天地生。寂兮寥兮，独立而不改，周行而不殆，可以为天下母。吾不知其名，字之曰道，强为之名曰大。大曰逝，逝曰远，远曰反。
+    </div>
+</section>
+            <section id="section26" class="section">
+    <h2 class="section-title">第二十六章</h2>
+    <div class="section-content">
+        重为轻根，静为躁君。是以圣人终日行不离辎重；虽有荣观，燕处超然。奈何万乘之主而以身轻天下？轻则失本，躁则失君。
+    </div>
+</section>
+
+<section id="section27" class="section">
+    <h2 class="section-title">第二十七章</h2>
+    <div class="section-content">
+        善行无辙迹，善言无瑕谪；善数不用筹策；善闭无关楗而不可开，善结无绳约而不可解。
+    </div>
+</section>
+
+<section id="section28" class="section">
+    <h2 class="section-title">第二十八章</h2>
+    <div class="section-content">
+        知其雄，守其雌，为天下谿。为天下谿，常德不离。复归于婴儿。知其白，守其黑，为天下式。为天下式，常德不忒。复归于无极。
+    </div>
+</section>
+
+<section id="section29" class="section">
+    <h2 class="section-title">第二十九章</h2>
+    <div class="section-content">
+        将欲取天下而为之，吾见其不得已。天下神器，不可为也，不可执也。为者败之，执者失之。故物或行或随，或噬或闭，或利或害，或坚或脱。
+    </div>
+</section>
+
+<section id="section30" class="section">
+    <h2 class="section-title">第三十章</h2>
+    <div class="section-content">
+        以道佐人主者，不以兵强天下；兵强则灭，兵弱则不胜。以道佐天下，万物将自宾。
+    </div>
+</section>
+            <section id="section31" class="section">
+    <h2 class="section-title">第三十一章</h2>
+    <div class="section-content">
+        兵者不祥之器，物或恶之，故有道者不处。君子居则贵左，用兵则贵右。兵者不祥之器，非君子之器，不得已而用之，恬淡为上。
+    </div>
+</section>
+
+<section id="section32" class="section">
+    <h2 class="section-title">第三十二章</h2>
+    <div class="section-content">
+        道常无名。朴虽小，天下莫能臣也。侯王若能守之，万物将自宾。
+    </div>
+</section>
+
+<section id="section33" class="section">
+    <h2 class="section-title">第三十三章</h2>
+    <div class="section-content">
+        知人者智，自知者明。胜人者有力，自胜者强。知足者富。强行者有志。不失其所者久。死而不亡者寿。
+    </div>
+</section>
+
+<section id="section34" class="section">
+    <h2 class="section-title">第三十四章</h2>
+    <div class="section-content">
+        大道泛兮，其可左右。万物恃之以生而不辞，功成而不处。夫唯不处，故弗去。
+    </div>
+</section>
+
+<section id="section35" class="section">
+    <h2 class="section-title">第三十五章</h2>
+    <div class="section-content">
+        执大象，天下往。往而不害，安平太。乐与饵，过客止。道之出口淡乎其无味。
+    </div>
+</section>
+
+<section id="section36" class="section">
+    <h2 class="section-title">第三十六章</h2>
+    <div class="section-content">
+        将欲歙之，必固张之；将欲弱之，必固强之；将欲废之，必固兴之；将欲夺之，必固与之。
+    </div>
+</section>
+
+<section id="section37" class="section">
+    <h2 class="section-title">第三十七章</h2>
+    <div class="section-content">
+        道常无为，而无不为。侯王若能守之，万物将自化。
+    </div>
+</section>
+
+<section id="section38" class="section">
+    <h2 class="section-title">第三十八章</h2>
+    <div class="section-content">
+        上德不德，是以有德；下德不失德，是以无德。上德无为而无以为；下德为之而有以为。
+    </div>
+</section>
+
+<section id="section39" class="section">
+    <h2 class="section-title">第三十九章</h2>
+    <div class="section-content">
+        昔之得一者：天得一以清，地得一以宁，神得一以灵，谷得一以盈，万物得一以生，侯王得一以为天下正。
+    </div>
+</section>
+
+<section id="section40" class="section">
+    <h2 class="section-title">第四十章</h2>
+    <div class="section-content">
+        反者道之动；弱者道之用。天下万物生于有，有生于无。
+    </div>
+</section>
+            <section id="section41" class="section">
+    <h2 class="section-title">第四十一章</h2>
+    <div class="section-content">
+        上士闻道，勤而行之；中士闻道，若存若亡；下士闻道，大笑之。不笑不足以为道。
+    </div>
+</section>
+
+<section id="section42" class="section">
+    <h2 class="section-title">第四十二章</h2>
+    <div class="section-content">
+        道生一，一生二，二生三，三生万物。万物负阴而抱阳，冲气以为和。
+    </div>
+</section>
+
+<section id="section43" class="section">
+    <h2 class="section-title">第四十三章</h2>
+    <div class="section-content">
+        天下之至柔，驰骋天下之至坚。无有入无间，吾是以知无为之有益。
+    </div>
+</section>
+
+<section id="section44" class="section">
+    <h2 class="section-title">第四十四章</h2>
+    <div class="section-content">
+        名与身孰亲？身与货孰多？得与亡孰病？是故甚爱必大费，多藏必厚亡。
+    </div>
+</section>
+
+<section id="section45" class="section">
+    <h2 class="section-title">第四十五章</h2>
+    <div class="section-content">
+        大成若缺，其用不弊；大盈若冲，其用不穷。大直若屈，大巧若拙，大辩若讷。
+    </div>
+</section>
+
+<section id="section46" class="section">
+    <h2 class="section-title">第四十六章</h2>
+    <div class="section-content">
+        天下有道，却走马以粪；天下无道，戎马生于郊。
+    </div>
+</section>
+
+<section id="section47" class="section">
+    <h2 class="section-title">第四十七章</h2>
+    <div class="section-content">
+        不出户，知天下；不窥牖，见天道。其出弥远，其知弥少。
+    </div>
+</section>
+
+<section id="section48" class="section">
+    <h2 class="section-title">第四十八章</h2>
+    <div class="section-content">
+        为学日益，为道日损。损之又损，以至于无为。
+    </div>
+</section>
+
+<section id="section49" class="section">
+    <h2 class="section-title">第四十九章</h2>
+    <div class="section-content">
+        圣人无常心，以百姓心为心。善者吾善之，不善者吾亦善之，德善。
+    </div>
+</section>
+
+<section id="section50" class="section">
+    <h2 class="section-title">第五十章</h2>
+    <div class="section-content">
+        出生入死，生之徒十有三，死之徒十有三，人生之死，亦十有三。
+    </div>
+</section>
+            <section id="section51" class="section">
+    <h2 class="section-title">第五十一章</h2>
+    <div class="section-content">
+        道生之，德畜之，物形之，势成之。是以万物莫不尊道而贵德。
+    </div>
+</section>
+
+<section id="section52" class="section">
+    <h2 class="section-title">第五十二章</h2>
+    <div class="section-content">
+        天下有道，却走马以粪；天下无道，戎马生于郊。
+    </div>
+</section>
+
+<section id="section53" class="section">
+    <h2 class="section-title">第五十三章</h2>
+    <div class="section-content">
+        使我介然有知，行于大道，唯施是畏。
+    </div>
+</section>
+
+<section id="section54" class="section">
+    <h2 class="section-title">第五十四章</h2>
+    <div class="section-content">
+        善建者不拔，善抱者不脱，子孙以祭祀不绝。
+    </div>
+</section>
+
+<section id="section55" class="section">
+    <h2 class="section-title">第五十五章</h2>
+    <div class="section-content">
+        含德之厚，比于赤子。蜂虿不螫，猛兽不据，攫鸟不搏。
+    </div>
+</section>
+
+<section id="section56" class="section">
+    <h2 class="section-title">第五十六章</h2>
+    <div class="section-content">
+        知者不言，言者不知。塞其兑，闭其门，终身不勤。
+    </div>
+</section>
+
+<section id="section57" class="section">
+    <h2 class="section-title">第五十七章</h2>
+    <div class="section-content">
+        以正治国，以奇用兵；无事不扰民；无事不掠民。
+    </div>
+</section>
+
+<section id="section58" class="section">
+    <h2 class="section-title">第五十八章</h2>
+    <div class="section-content">
+        其政闷闷，其民淳淳；其政察察，其民缺缺。
+    </div>
+</section>
+
+<section id="section59" class="section">
+    <h2 class="section-title">第五十九章</h2>
+    <div class="section-content">
+        治人事天，莫若啬。夫唯啬，是谓早服。
+    </div>
+</section>
+
+<section id="section60" class="section">
+    <h2 class="section-title">第六十章</h2>
+    <div class="section-content">
+        治大国若烹小鲜。以道莅天下，万物将自化。
+    </div>
+</section>
+            <section id="section61" class="section">
+    <h2 class="section-title">第六十一章</h2>
+    <div class="section-content">
+        大国者下流。天下之交，归焉。安而不忘危，存而不忘亡，治而不忘乱。
+    </div>
+</section>
+
+<section id="section62" class="section">
+    <h2 class="section-title">第六十二章</h2>
+    <div class="section-content">
+        道者万物之奥。善人之宝，恶人之所保。美言可以市尊，美行可以加人。
+    </div>
+</section>
+
+<section id="section63" class="section">
+    <h2 class="section-title">第六十三章</h2>
+    <div class="section-content">
+        为无为，事无事，味无味。大小多少，报怨以德。
+    </div>
+</section>
+
+<section id="section64" class="section">
+    <h2 class="section-title">第六十四章</h2>
+    <div class="section-content">
+        其安易持，其未兆易谋。终日号而不嗄，和光同尘。
+    </div>
+</section>
+
+<section id="section65" class="section">
+    <h2 class="section-title">第六十五章</h2>
+    <div class="section-content">
+        古之善为士者，微妙玄通，深不可识。
+    </div>
+</section>
+
+<section id="section66" class="section">
+    <h2 class="section-title">第六十六章</h2>
+    <div class="section-content">
+        江海所以能为百谷王者，以其善下之，故能为百谷王。
+    </div>
+</section>
+
+<section id="section67" class="section">
+    <h2 class="section-title">第六十七章</h2>
+    <div class="section-content">
+        我有三宝，持而保之。一曰慈，二曰俭，三曰不敢为天下先。
+    </div>
+</section>
+
+<section id="section68" class="section">
+    <h2 class="section-title">第六十八章</h2>
+    <div class="section-content">
+        善为士者不武，善战者不怒，善胜敌者不与，善用人者为之下。
+    </div>
+</section>
+
+<section id="section69" class="section">
+    <h2 class="section-title">第六十九章</h2>
+    <div class="section-content">
+        用兵有言：吾不敢为主而为客，不敢进寸而退尺。
+    </div>
+</section>
+
+<section id="section70" class="section">
+    <h2 class="section-title">第七十章</h2>
+    <div class="section-content">
+        含德之厚，比于赤子。蜂虿不螫，猛兽不据，攫鸟不搏。
+    </div>
+</section>
+            <section id="section71" class="section">
+    <h2 class="section-title">第七十一章</h2>
+    <div class="section-content">
+        知不知，上；不知知，病。夫唯病病，是以不病。
+    </div>
+</section>
+
+<section id="section72" class="section">
+    <h2 class="section-title">第七十二章</h2>
+    <div class="section-content">
+        民不畏威，则大威至。无狎其所居，无厌其所生。
+    </div>
+</section>
+
+<section id="section73" class="section">
+    <h2 class="section-title">第七十三章</h2>
+    <div class="section-content">
+        勇于敢则杀，勇于不敢则活。此两者，或利或害。
+    </div>
+</section>
+
+<section id="section74" class="section">
+    <h2 class="section-title">第七十四章</h2>
+    <div class="section-content">
+        民不畏死，奈何以死惧之？若使民常畏死，而为奇者，是谓袭常。
+    </div>
+</section>
+
+<section id="section75" class="section">
+    <h2 class="section-title">第七十五章</h2>
+    <div class="section-content">
+        民之饥，以其上食税之多。是以饥；民之难治，以其上之乱。
+    </div>
+</section>
+
+<section id="section76" class="section">
+    <h2 class="section-title">第七十六章</h2>
+    <div class="section-content">
+        人之生也柔弱，其死也坚强。草木之生也柔脆，其死也枯槁。
+    </div>
+</section>
+
+<section id="section77" class="section">
+    <h2 class="section-title">第七十七章</h2>
+    <div class="section-content">
+        天之道，利而不害；圣人之道，为而不争。
+    </div>
+</section>
+
+<section id="section78" class="section">
+    <h2 class="section-title">第七十八章</h2>
+    <div class="section-content">
+        天下莫柔弱于水，而攻坚强者莫之能胜，以其无以易之。
+    </div>
+</section>
+
+<section id="section79" class="section">
+    <h2 class="section-title">第七十九章</h2>
+    <div class="section-content">
+        和大怨，必有余怨；报怨以德，安可以为善？
+    </div>
+</section>
+
+<section id="section80" class="section">
+    <h2 class="section-title">第八十章</h2>
+    <div class="section-content">
+        小国寡民，使有什伯之器而不用。使民重死而不远徙。
+    </div>
+</section>
+            
+
+            <!-- Add more sections here -->
+
+            <section id="section81" class="section">
+                <h2 class="section-title">第八十一章</h2>
+                <div class="section-content">
+                    信言不美，美言不信；善者不辩，辩者不善。知者不博，博者不知。圣人不积，既以为人己愈有，既以与人己愈多。天之道，利而不害；圣人之道，为而不争。
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            const nav = document.getElementById('navigation');
+            const overlay = document.querySelector('.overlay');
+            nav.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        function closeMenu() {
+            const nav = document.getElementById('navigation');
+            const overlay = document.querySelector('.overlay');
+            nav.classList.remove('open');
+            overlay.classList.remove('show');
+        }
+
+        // Active section highlighting
+        function updateActiveSection() {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            let currentSection = '';
+
+            sections.forEach((section) => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= 150 && rect.bottom >= 150) {
+                    currentSection = section.id;
+                }
+            });
+
+            navLinks.forEach((link) => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-link').forEach((link) => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+
+                if (targetSection) {
+                    const offsetTop = targetSection.offsetTop - 100;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth',
+                    });
+                }
+            });
+        });
+
+        // Update active section on scroll
+        window.addEventListener('scroll', updateActiveSection);
+
+        // Initialize active section
+        updateActiveSection();
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function (e) {
+            const nav = document.getElementById('navigation');
+            const menuToggle = document.querySelector('.menu-toggle');
+
+            if (!nav.contains(e.target) && !menuToggle.contains(e.target)) {
+                closeMenu();
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 768) {
+                closeMenu();
+            }
+        });
+
+        // Search filter function
+        function handleSearch() {
+    const input = document.getElementById('searchInput');
+    const query = input.value.trim();
+    if (!query) {
+        clearHighlights();
+        return;
+    }
+    // Clear previous highlights
+    clearHighlights();
+
+    // Find all main content text nodes and highlight matches
+    const content = document.querySelector('.main-content');
+    const regex = new RegExp(query, 'g');
+
+    // Highlight all matches
+    highlightMatches(content, regex);
+
+    // Scroll to first match
+    scrollToFirstMatch();
+}
+
+function highlightMatches(container, regex) {
+    const walk = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+    const nodes = [];
+    while (walk.nextNode()) {
+        nodes.push(walk.currentNode);
+    }
+
+    nodes.forEach(textNode => {
+        const parent = textNode.parentNode;
+        if (!regex.test(textNode.textContent)) return;
+
+        const frag = document.createDocumentFragment();
+        let lastIndex = 0;
+        textNode.textContent.replace(regex, (match, offset) => {
+            // Text before match
+            const before = textNode.textContent.slice(lastIndex, offset);
+            if (before) {
+                frag.appendChild(document.createTextNode(before));
+            }
+            // Matched text wrapped in span
+            const highlightSpan = document.createElement('span');
+            highlightSpan.textContent = match;
+            highlightSpan.className = 'highlight';
+            frag.appendChild(highlightSpan);
+            lastIndex = offset + match.length;
+        });
+        // Text after last match
+        const after = textNode.textContent.slice(lastIndex);
+        if (after) {
+            frag.appendChild(document.createTextNode(after));
+        }
+        parent.replaceChild(frag, textNode);
+    });
+}
+
+function clearHighlights() {
+    const highlights = document.querySelectorAll('.highlight');
+    highlights.forEach(span => {
+        const parent = span.parentNode;
+        parent.replaceChild(document.createTextNode(span.textContent), span);
+        parent.normalize();
+    });
+}
+
+function scrollToFirstMatch() {
+    const first = document.querySelector('.highlight');
+    if (first) {
+        const offsetTop = first.getBoundingClientRect().top + window.pageYOffset - 100;
+        window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+    }
+}
+    </script>
+</body>
+</html>
