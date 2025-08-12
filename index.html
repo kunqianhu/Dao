@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>道德经</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600&display=swap"
+        rel="stylesheet"
+    />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: #f9f7f1;
+            color: #333;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Fixed Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(249, 247, 241, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(51, 51, 51, 0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 500;
+            color: #567a6a;
+            letter-spacing: 2px;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        /* Search box */
+        .search-box {
+            position: relative;
+            width: 200px;
+            max-width: 40vw;
+        }
+
+        .search-box input[type='search'] {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 1.5px solid #567a6a;
+            font-size: 16px;
+            font-family: 'Noto Serif SC', serif;
+            color: #333;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-box input[type='search']:focus {
+            outline: none;
+            border-color: #3a7d44;
+            box-shadow: 0 0 5px #3a7d44aa;
+        }
+
+        /* Mobile Menu Button */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 25px;
+            left: 20px;
+            z-index: 1001;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #567a6a;
+            cursor: pointer;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Navigation Sidebar */
+        .navigation {
+            width: 25%;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            left: 0;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 999;
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            margin: 0;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 15px 25px;
+            text-decoration: none;
+            color: #444;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .nav-link:hover {
+            background-color: #f0f8f0;
+            border-left-color: #3a7d44;
+            color: #3a7d44;
+        }
+
+        .nav-link.active {
+            background-color: #e8f5e8;
+            border-left-color: #567a6a;
+            color: #567a6a;
+            font-weight: 500;
+        }
+
+        .section-number {
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 25%;
+            width: 75%;
+            padding: 40px 60px;
+        }
+
+        .section {
+            margin-bottom: 60px;
+            scroll-margin-top: 100px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #567a6a;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8f5e8;
+        }
+
+        .section-content {
+            font-size: 18px;
+            line-height: 2;
+            color: #444;
+            text-align: justify;
+            letter-spacing: 1px;
+            white-space: pre-wrap;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .header h1 {
+                font-size: 22px;
+                padding-left: 60px;
+                flex-grow: unset;
+                text-align: left;
+            }
+
+            .search-box {
+                width: 150px;
+            }
+
+            .navigation {
+                width: 280px;
+                transform: translateX(-100%);
+            }
+
+            .navigation.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 30px 20px;
+            }
+
+            .section-content {
+                font-size: 16px;
+                line-height: 1.9;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+        }
+
+        /* Mobile Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar */
+        .navigation::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .navigation::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .navigation::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .navigation::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header class="header">
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <h1>道德经</h1>
+        <div class="search-box">
+            <input
+                type="search"
+                id="searchInput"
+                placeholder="搜索章节..."
+                aria-label="搜索章节"
+                oninput="filterNav()"
+            />
+        </div>
+    </header>
+
+    <!-- Mobile Overlay -->
+    <div class="overlay" onclick="closeMenu()"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Navigation Sidebar -->
+        <nav class="navigation" id="navigation">
+            <ul class="nav-list" id="navList">
+                <li class="nav-item">
+                    <a href="#section1" class="nav-link" onclick="closeMenu()">
+                        <span class="section-number">第一章</span> 道可道，非常道；名可名，非常名。
+                    </a>
+                </li>
+                <!-- Add more chapters here -->
+                <li class="nav-item">
+                    <a href="#section81" class="nav-link" onclick="closeMenu()">
+                        <span class="section-number">第八十一章</span> 信言不美，美言不信。
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <section id="section1" class="section">
+                <h2 class="section-title">第一章</h2>
+                <div class="section-content">
+                    道可道，非常道；名可名，非常名。<br />
+                    无名天地之始；有名万物之母。<br />
+                    故常无欲，以观其妙；常有欲，以观其徼。<br />
+                    此两者，同出而异名，同谓之玄。玄之又玄，众妙之门。
+                </div>
+            </section>
+
+            <!-- Add more sections here -->
+
+            <section id="section81" class="section">
+                <h2 class="section-title">第八十一章</h2>
+                <div class="section-content">
+                    信言不美，美言不信；善者不辩，辩者不善。<br />
+                    知者不博，博者不知。<br />
+                    圣人不积，既以为人己愈有，既以与人己愈多。<br />
+                    天之道，利而不害；圣人之道，为而不争。
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            const nav = document.getElementById('navigation');
+            const overlay = document.querySelector('.overlay');
+            nav.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        function closeMenu() {
+            const nav = document.getElementById('navigation');
+            const overlay = document.querySelector('.overlay');
+            nav.classList.remove('open');
+            overlay.classList.remove('show');
+        }
+
+        // Active section highlighting
+        function updateActiveSection() {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            let currentSection = '';
+
+            sections.forEach((section) => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= 150 && rect.bottom >= 150) {
+                    currentSection = section.id;
+                }
+            });
+
+            navLinks.forEach((link) => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-link').forEach((link) => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+
+                if (targetSection) {
+                    const offsetTop = targetSection.offsetTop - 100;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth',
+                    });
+                }
+            });
+        });
+
+        // Update active section on scroll
+        window.addEventListener('scroll', updateActiveSection);
+
+        // Initialize active section
+        updateActiveSection();
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function (e) {
+            const nav = document.getElementById('navigation');
+            const menuToggle = document.querySelector('.menu-toggle');
+
+            if (!nav.contains(e.target) && !menuToggle.contains(e.target)) {
+                closeMenu();
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 768) {
+                closeMenu();
+            }
+        });
+
+        // Search filter function
+        function filterNav() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.trim().toLowerCase();
+            const navList = document.getElementById('navList');
+            const links = navList.getElementsByTagName('a');
+
+            for (let i = 0; i < links.length; i++) {
+                const text = links[i].textContent.toLowerCase();
+                if (text.indexOf(filter) > -1) {
+                    links[i].parentElement.style.display = '';
+                } else {
+                    links[i].parentElement.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
